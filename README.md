@@ -17,9 +17,18 @@ npm run build
 
 # build for production and view the bundle analyzer report
 npm run build --report
-```
 
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
-=======
-# vuexcms
->>>>>>> c9ca9950781d3eae9ed4d99dbadf0659a131fb64
+# 查看用户数据
+select * from users;
+
+# 删除某条数据
+delete from users where id = "?";
+
+# 查看表内有多少条数据
+select count(*) from users;
+
+#查看限定数据
+## 查看第一到第六条数据
+select * from users limit 0,5;
+## 查看前两行数据
+select * from users limit 2；

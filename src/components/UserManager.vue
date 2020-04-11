@@ -1,4 +1,21 @@
-<!--  -->
+<!-- 
+增加功能：
+   1.实现分页功能
+    1.1使用pagination插件
+    1.2前端向后台查询数据后，后台返回数据
+    1.3前端对后台返回的数据进行分页，最后在页面上显示
+    有缺点需要改进：
+      如果后台一次性返回的数据过多，会造成数据卡死，页面加载时间过长，不能给用户良好的体验
+
+    因为最初的想法是，想要后端进行数据截取，再返回给前端，不用前端进行分页，但技术未能实现
+    1.1 前端页面需发送需要查询的参数给后台
+      1.1.1 改造函数
+    1.2 后台数据库查询，根据前端传送的参数进行查询，返回数据给前端
+    1.3 根据返回的结果显示数据
+    
+
+
+ -->
 <template>
   <div class>
     <el-card class="box-card">
@@ -9,7 +26,7 @@
           <el-button class="seach" size="small" @click="seach">搜索</el-button>
         </div>
       </div>
-      <el-table :data="tableData" style="width: 100%" >
+      <el-table :data="pageData" style="width: 100%">
         <el-table-column prop="id" label="id" width="180"></el-table-column>
         <el-table-column prop="username" label="用户名" width="180"></el-table-column>
         <el-table-column prop="realname" label="真实姓名"></el-table-column>
@@ -20,7 +37,14 @@
           </template>
         </el-table-column>
       </el-table>
-
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="currentPage"
+        :page-size="pageSize"
+        :total="tableData.length"
+        layout="prev, pager, next"
+      ></el-pagination>
     </el-card>
   </div>
 </template>
@@ -34,9 +58,13 @@ export default {
   //import引入的组件需要注入到对象中才能使用
   data() {
     return {
-      tableData: [],
-      input: "",
+      tableData: [], //数据列表
+      input: "", //输入值
       seachInfo: [],
+      pageData:[],  
+      currentPage:1,
+      pageSize:10,
+      limit:10
     };
   },
   computed: {
@@ -46,40 +74,69 @@ export default {
   },
 
   methods: {
-     //初始化，加载数据
-    initData() {
+    //初始化，加载数据
+    /* initData() {
       this.$store.dispatch("GET_USERLIST").then(() => {
-         this.tableData = this.$store.state.userlist
-         this.seachInfo = this.tableData
+        this.tableData = this.$store.state.userlist;
+        this.seachInfo = this.tableData;
       });
-    },   
+    }, */
+    initData() {
+      
+      this.axios
+        .post("/api/getuserlist")
+        .then(res => {
+          this.tableData = res.data;
+          this.seachInfo = this.tableData;
+          this.pageData = this.tableData.slice(0,10)
+          // console.log(res)
+        });
+    },
+
+    /* //查询数据总条数
+    querySqlTotal(){
+      this.axios.get('/api/sqltotaldata').then(res => {
+        console.log(Object.values(res.data[0]).toString())
+        // this.total = Object.values(res.data[0]).toString()
+      })
+    },
+ */
+    //页数改变
+    handleSizeChange(size) {
+      this.pageSize = size
+    },
+
+    //当前页数改变
+    handleCurrentChange(currentPage) {
+      this.pageData = this.tableData.slice(currentPage*10-10,currentPage*10)
+    },
+
     //查找数据
     seach() {
       let _this = this;
-      if(this.input === ''){
-         this.tableData = this.seachInfo 
+      if (this.input === "") {
+        this.tableData = this.seachInfo;
       }
-         this.tableData = this.tableData.filter(v => {
-           return Object.keys(v).some(key => {
-             return (
-               String(v[key])
-                 .toLowerCase()
-                 .indexOf(_this.input) > -1
-             );
-           });
-         });
-      
+      this.tableData = this.tableData.filter(v => {
+        return Object.keys(v).some(key => {
+          return (
+            String(v[key])
+              .toLowerCase()
+              .indexOf(_this.input) > -1
+          );
+        });
+      });
     },
 
     handleClick(row) {
       console.log(row.id);
     },
-   //删除数据
+    //删除数据
     userDel(row) {
       let _this = this;
       this.axios.post("/api/userdel", { id: row.id }).then(res => {
         if (res.data === 1) {
-           this.initData()
+          this.initData();
           this.$message({
             showClose: true,
             message: "删除成功",
@@ -130,5 +187,9 @@ export default {
 }
 .clearfix:after {
   clear: both;
+}
+.el-pagination {
+  width: 100% !important;
+  text-align: center;
 }
 </style>
