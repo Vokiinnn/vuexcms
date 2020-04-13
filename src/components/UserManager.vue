@@ -75,16 +75,10 @@ export default {
 
   methods: {
     //初始化，加载数据
-    /* initData() {
-      this.$store.dispatch("GET_USERLIST").then(() => {
-        this.tableData = this.$store.state.userlist;
-        this.seachInfo = this.tableData;
-      });
-    }, */
     initData() {
       
       this.axios
-        .post("/api/getuserlist")
+        .post("/api2/users/getuserlist")
         .then(res => {
           this.tableData = res.data;
           this.seachInfo = this.tableData;
@@ -93,14 +87,6 @@ export default {
         });
     },
 
-    /* //查询数据总条数
-    querySqlTotal(){
-      this.axios.get('/api/sqltotaldata').then(res => {
-        console.log(Object.values(res.data[0]).toString())
-        // this.total = Object.values(res.data[0]).toString()
-      })
-    },
- */
     //页数改变
     handleSizeChange(size) {
       this.pageSize = size
@@ -134,7 +120,7 @@ export default {
     //删除数据
     userDel(row) {
       let _this = this;
-      this.axios.post("/api/userdel", { id: row.id }).then(res => {
+      this.axios.post("/api2/users/userdel", { id: row.id }).then(res => {
         if (res.data === 1) {
           this.initData();
           this.$message({

@@ -31,20 +31,13 @@ export default {
     };
   },
   methods: {
-    btn: function() {
-      var search = this.search;
-      if (search) {
-        this.searchData = this.products.filter(function(product) {
-          console.log(product);
-          return Object.keys(product).some(function(key) {
-            console.log(key);
-            // return (
-            //   String(product[key])
-            //     .toLowerCase()
-            //     .indexOf(search) > -1
-            // );
-          });
-        });
+    btn(){
+      let reg = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.com)$/
+      let value = 'asdfsdfd'
+      if(value.match(reg)){
+        console.log('2222')
+      }else{
+        console.log('3333')
       }
     }
   }

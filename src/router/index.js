@@ -13,6 +13,7 @@ const MessageManager = () => import('@/components/MessageManager')
 const My = () => import('@/components/My')
 const test = () => import('@/components/test')
 const userEdit = () => import('@/components/userEdit')
+const Register = () => import('@/components/Register')
 
 Vue.use(Router)
 
@@ -22,6 +23,11 @@ export default new Router({
       path: '/login',
       name: 'login',
       component: Login
+    },
+    {
+      path: '/register',
+      name: 'register',
+      component: Register
     },
     {
       path: '/userEdit',

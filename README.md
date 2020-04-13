@@ -18,6 +18,12 @@ npm run build
 # build for production and view the bundle analyzer report
 npm run build --report
 
+#创建数据库
+create database *;
+
+#创建表
+create
+
 # 查看用户数据
 select * from users;
 
