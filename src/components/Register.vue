@@ -32,7 +32,7 @@
       </el-form-item>
 
       <el-form-item class="registerBtn">
-        <el-button type="primary" @click="submitForm('registerform')">注册</el-button>
+        <el-button type="primary" @click="registerForm('registerform')">注册</el-button>
         <el-button @click="login" type="success">去登陆</el-button>
       </el-form-item>
     </el-form>
@@ -52,20 +52,20 @@ export default {
         callback();
       }
     };
-    let validateEmail = (rule,value,callback) => {
-        let reg =  /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.com)$/
-        if(!value.match(reg)){
-            callback(new Error("请输入正确的邮箱！"));
-        }
-    }
+    let validateEmail = (rule, value, callback) => {
+      let reg = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.com)$/;
+      if (!value.match(reg)) {
+        callback(new Error("请输入正确的邮箱！"));
+      }
+    };
     return {
       //注册表单
       registerform: {
         username: "",
         password: "",
         repassword: "",
-        verify: "",
-        email: ""
+        email: "",
+        verify: ""
       },
       //验证规则
       rules: {
@@ -86,67 +86,70 @@ export default {
           { min: 4, max: 4, message: "请正确输入邮箱验证码", trigger: "blur" }
         ],
         email: [
-            { required: true, message: "请输入邮箱", trigger: "blur" },
-            { validator: validateEmail, trigger: "blur" }
+          { required: true, message: "请输入邮箱", trigger: "blur" },
+          { validator: validateEmail, trigger: "blur" }
         ]
       }
     };
   },
   methods: {
     //注册
-    submitForm(formName) {
-      this.$refs[formName].validate(valid => {
-        if (valid) {
+    registerForm(formName) {
+        console.log('789')
+     
           //保留this指向
           let _this = this;
           //收集用户名和用户密码发送到后端
           this.axios
-            .post("/api2/users/checklogin", {
-              param: {
-                username: _this.loginform.username,
-                password: _this.loginform.password
-              }
+            .post("/api/api2/users/register", {
+              username: _this.registerform.username,
+              password: _this.registerform.password,
+              email: _this.registerform.email,
+              verify: _this.registerform.verify
             })
             .then(res => {
-              if (res.data.length) {
-                //把当前得用户数据存到vuex里
-                _this.$store.commit("SAVE_USERINFO", res.data);
-
-                _this.$message({
-                  showClose: true,
-                  message: "登录成功",
-                  type: "success"
-                });
-                _this.$router.push("/");
-              } else {
-                _this.$message({
-                  showClose: true,
-                  message: "登录失败，请检查账号或密码",
-                  type: "error"
-                });
-              }
+            //   console.log(res);
+                if(res.data.status === 0){
+                     _this.$message({
+                    showClose: true,
+                    message: res.data.msg,
+                    type: "success"
+                    });
+                    this.$router.push('/login')
+                }
             });
-        } else {
-          console.log("error submit!!");
-          return false;
-        }
-      });
+       
     },
 
-    //注册
+    //切换到登录界面
     login() {
       this.$router.push("/login");
     },
 
     //发送验证码
     sendVerify() {
-      console.log("verify");
+      //   console.log("verify");
+      let _this = this;
+      this.axios
+        .get("/api/api2/users/verify?email=" + this.registerform.email)
+        .then(res => {
+          // console.log(res.data.status)
+          if (res.data.status !== 0) {
+            _this.$message({
+              showClose: true,
+              message: res.data.msg,
+              type: "error"
+            });
+          } else {
+            _this.$message({
+              showClose: true,
+              message: res.data.msg,
+              type: "success"
+            });
+          }
+        })
+        
     }
-
-    //清空输入框
-    // resetForm(formName) {
-    //   this.$refs[formName].resetFields();
-    // }
   }
 };
 </script>

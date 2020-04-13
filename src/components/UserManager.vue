@@ -29,7 +29,7 @@
       <el-table :data="pageData" style="width: 100%">
         <el-table-column prop="id" label="id" width="180"></el-table-column>
         <el-table-column prop="username" label="用户名" width="180"></el-table-column>
-        <el-table-column prop="realname" label="真实姓名"></el-table-column>
+        <el-table-column prop="email" label="邮箱"></el-table-column>
         <el-table-column fixed="right" label="操作" width="100">
           <template slot-scope="scope">
             <el-button @click="handleClick(scope.row)" type="text" size="small">修改</el-button>
@@ -78,7 +78,7 @@ export default {
     initData() {
       
       this.axios
-        .post("/api2/users/getuserlist")
+        .post("/api/api2/users/getuserlist")
         .then(res => {
           this.tableData = res.data;
           this.seachInfo = this.tableData;
@@ -153,15 +153,7 @@ export default {
   left: 70%;
   display: inline-flex;
 }
-/* .el-input {
-  width: 16%;
-  position: relative;
-  right: -61%;
-}
-.seach {
-  position: relative;
-  right: -61%;
-} */
+
 .item {
   margin-bottom: 18px;
 }

@@ -48,7 +48,6 @@ export default {
     };
   },
   methods: {
-
     //登录
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
@@ -57,7 +56,7 @@ export default {
           let _this = this;
           //收集用户名和用户密码发送到后端
           this.axios
-            .post("/api2/users/checklogin", {
+            .post("/api/api2/users/checklogin", {
               param: {
                 username: _this.loginform.username,
                 password: _this.loginform.password
@@ -74,14 +73,15 @@ export default {
                   type: "success"
                 });
                 _this.$router.push("/");
-              } else {
-                _this.$message({
-                  showClose: true,
-                  message: "登录失败，请检查账号或密码",
-                  type: "error"
-                });
               }
-            });
+            })
+            // .catch(
+            //   _this.$message({
+            //     showClose: true,
+            //     message: "登录失败，请检查账号或密码",
+            //     type: "error"
+            //   })
+            // );
         } else {
           console.log("error submit!!");
           return false;
@@ -89,11 +89,10 @@ export default {
       });
     },
 
-  //注册
-  register(){
-    this.$router.push('/register')
-  }
-
+    //注册
+    register() {
+      this.$router.push("/register");
+    }
 
     //清空输入框
     // resetForm(formName) {
@@ -114,7 +113,7 @@ export default {
 }
 .el-form {
   width: 400px;
-  box-shadow:4px 4px 4px #ccc;
+  box-shadow: 4px 4px 4px #ccc;
   border: 1px solid #aaa;
   border-radius: 4px;
   padding: 0px 40px 0px 0px;
@@ -124,7 +123,7 @@ export default {
   color: #333;
   padding: 20px 0 20px 160px;
 }
-.loginBtn{
-  padding:0 0 0 50px;
+.loginBtn {
+  padding: 0 0 0 50px;
 }
 </style>
