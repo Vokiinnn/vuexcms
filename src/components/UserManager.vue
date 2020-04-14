@@ -12,6 +12,17 @@
       1.1.1 改造函数
     1.2 后台数据库查询，根据前端传送的参数进行查询，返回数据给前端
     1.3 根据返回的结果显示数据
+
+
+    2.把数据存到state里，不用反复请求数据
+      2.1设置mutation、action
+      2.2提交commit到state
+
+      bug:
+      //删除后某条数据后，页面会跳转会第一页   
+      //某一页删除完数据后，页数会跳转到前一页，但前一页的数据不会显示
+      //seach函数，查找页面会显示超过10条的数据
+
     
 
 
@@ -29,7 +40,7 @@
       <el-table :data="pageData" style="width: 100%">
         <el-table-column prop="id" label="id" width="180"></el-table-column>
         <el-table-column prop="username" label="用户名" width="180"></el-table-column>
-        <el-table-column prop="email" label="邮箱"></el-table-column>
+        <el-table-column prop="realname" label="真实姓名"></el-table-column>
         <el-table-column fixed="right" label="操作" width="100">
           <template slot-scope="scope">
             <el-button @click="handleClick(scope.row)" type="text" size="small">修改</el-button>
@@ -74,55 +85,83 @@ export default {
   },
 
   methods: {
+    //获取数据
+    getuserlist(currentPage){
+      this.$store.dispatch('GET_USERLIST').then(() => {
+          this.tableData = this.$store.state.userlist
+          this.seachInfo = this.tableData;
+          this.pageData = this.tableData.slice(currentPage*10-10,currentPage*10)
+        })
+    },
+
+
     //初始化，加载数据
-    initData() {
-      
-      this.axios
-        .post("/api/api2/users/getuserlist")
-        .then(res => {
-          this.tableData = res.data;
+    initData(status) {
+      if(this.$store.state.userlist && status){
+          this.tableData = this.$store.state.userlist
           this.seachInfo = this.tableData;
           this.pageData = this.tableData.slice(0,10)
-          // console.log(res)
-        });
+      }else{
+          this.getuserlist(this.currentPage)
+        }
     },
+
+
 
     //页数改变
     handleSizeChange(size) {
-      this.pageSize = size
+    
     },
 
     //当前页数改变
     handleCurrentChange(currentPage) {
+      console.log('当前页数改变',this.pageSize)
       this.pageData = this.tableData.slice(currentPage*10-10,currentPage*10)
+      this.currentPage = currentPage
     },
 
     //查找数据
     seach() {
+      //怎么存一个值，在下次时判断是否一致
       let _this = this;
-      if (this.input === "") {
+
+      
+      if (this.input === '') {
         this.tableData = this.seachInfo;
       }
-      this.tableData = this.tableData.filter(v => {
+
+      this.tableData = this.seachInfo.filter(v => {
+        // console.log(v)
         return Object.keys(v).some(key => {
+          // console.log(key)
           return (
+            
             String(v[key])
               .toLowerCase()
               .indexOf(_this.input) > -1
           );
         });
       });
+      this.pageData = this.tableData.slice(this.currentPage*10-10,this.currentPage*10)
     },
 
     handleClick(row) {
       console.log(row.id);
     },
     //删除数据
+    
     userDel(row) {
       let _this = this;
-      this.axios.post("/api2/users/userdel", { id: row.id }).then(res => {
+
+      this.axios.post("/api/api2/users/userdel", { id: row.id }).then(res => {
         if (res.data === 1) {
-          this.initData();
+          //当页面显示的数据条数为0时，传给更新函数的页面数 - 1
+          if(this.pageData.length - 1 === 0){
+            this.currentPage = this.currentPage - 1
+          }
+          //删除某条数据后，重新从后台获取数据
+          this.getuserlist(this.currentPage)
+
           this.$message({
             showClose: true,
             message: "删除成功",
@@ -133,7 +172,7 @@ export default {
     }
   },
   created() {
-    this.initData();
+      this.initData();
   }
 };
 </script>

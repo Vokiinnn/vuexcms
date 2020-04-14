@@ -9,7 +9,7 @@ Vue.use(Vuex)
 //状态
 const state = {
     userinfo:JSON.parse(localStorage.getItem('userinfo')),
-    userlist:[] 
+    userlist:JSON.parse(localStorage.getItem('userlist')) 
 }
 
 //mutation主要用来操作state
@@ -22,13 +22,14 @@ const mutations = {
     },
     //获取用户列表
     GET_USERLIST(state,userlist){
+        localStorage.setItem('userlist',JSON.stringify(userlist))
         state.userlist = userlist
     }
 }
 const actions = {
     GET_USERLIST({ commit }){
         return new Promise((resolve,reject) => {
-            axios.get('/api/getuserlist').then(res => {
+            axios.post('/api/api2/users/getuserlist').then(res => {
                 commit('GET_USERLIST',res.data);
                 resolve();
             })
