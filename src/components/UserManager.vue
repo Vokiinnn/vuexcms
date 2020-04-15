@@ -96,8 +96,9 @@ export default {
 
 
     //初始化，加载数据
-    initData(status) {
-      if(this.$store.state.userlist && status){
+    initData() {
+      console.log(this.$store.state.userlist)
+      if(this.$store.state.userlist){
           this.tableData = this.$store.state.userlist
           this.seachInfo = this.tableData;
           this.pageData = this.tableData.slice(0,10)
