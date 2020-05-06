@@ -22,6 +22,8 @@
 
 因使用的是node的express，所以服务需要另外安装到与vuexcms的同一级目录
 
+git@github.com:Vokiinnn/vuexcms-serve.git
+
 ### 安装步骤
 
 ```
