@@ -8,7 +8,17 @@ import 'element-ui/lib/theme-chalk/index.css'
 import axios from 'axios'
 import store from './vuex/store'
 
-
+router.beforeEach((to, from, next) => {
+  console.log(to)
+  console.log(from)
+  if(!to.meta.isLogin){
+    next({
+      path:'/login'
+    })
+  }else{
+    next()
+  }
+})
 
 Vue.prototype.axios = axios
 Vue.use(ElementUI)

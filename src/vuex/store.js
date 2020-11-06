@@ -20,6 +20,10 @@ const mutations = {
         localStorage.setItem('userinfo',JSON.stringify(userinfo))
         state.userinfo = userinfo
     },
+    // 删除用户数据
+    REMOVE_USERINFO(){
+        localStorage.removeItem('userinfo')
+    },
     //获取用户列表
     GET_USERLIST(state,userlist){
         localStorage.setItem('userlist',JSON.stringify(userlist))

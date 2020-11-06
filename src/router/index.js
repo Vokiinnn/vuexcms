@@ -22,21 +22,37 @@ export default new Router({
     {
       path: '/login',
       name: 'login',
+      meta:{
+        keepAlive:false,
+        isLogin:true
+      },
       component: Login
     },
     {
       path: '/register',
       name: 'register',
+      meta:{
+        keepAlive:false,
+        isLogin:false
+      },
       component: Register
     },
     {
       path: '/userEdit',
       name: 'userEdit',
+      meta:{
+        keepAlive:false,
+        isLogin:true
+      },
       component: userEdit
     },
     {
       path: '/test',
       name: 'test',
+      meta:{
+        keepAlive:false,
+        isLogin:false
+      },
       component: test
     },
     { 
@@ -48,26 +64,46 @@ export default new Router({
         {
           path: '/index',
           name: 'index',
+          meta:{
+            keepAlive:false,
+            isLogin:true
+          },
           component: Index
         },
         {
           path: '/my',
           name: 'my',
+          meta:{
+            keepAlive:false,
+            isLogin:true
+          },
           component: My
         },
         {
           path: '/userManager',
           name: 'userManager',
+          meta:{
+            keepAlive:false,
+            isLogin:true
+          },
           component: UserManager
         },
         {
           path: '/blogManager',
           name: 'blogManager',
+          meta:{
+            keepAlive:false,
+            isLogin:true
+          },
           component: BlogManager
         },
         {
           path: '/messageManager',
           name: 'messageManager',
+          meta:{
+            keepAlive:false,
+            isLogin:true
+          },
           component: MessageManager
         }
       ]

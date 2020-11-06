@@ -49,7 +49,7 @@ export default {
   },
   computed: {
     ...mapState({
-      username: state => state.userinfo.username
+      username: state => state.userinfo[0].username
     })
   },
   methods: {
@@ -63,6 +63,7 @@ export default {
         type: "warning"
       })
         .then(() => {
+          this.$store.commit('REMOVE_USERINFO')
           this.$router.push("/login");
           this.$message({
             type: "success",
